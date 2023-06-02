@@ -1,36 +1,36 @@
-const restaurants = []
+const items = []
 
 inputElement = document.querySelector('input');
 inputElement.onkeydown = event => {
     if (event.key == 'Enter' && inputElement.value) {
-        restaurants.push(inputElement.value);
+        items.push(inputElement.value);
         inputElement.value = '';
         draw();
     }
 }
 
-const restaurantsElement = document.querySelector('ui-restaurants');
+const itemsElement = document.querySelector('ui-items');
 const wheelElement = document.querySelector('ui-wheel-segments');
 const winnerElement = document.createElement('ui-winner');
 
 function draw() {
-    restaurantsElement.innerText = null;
+    itemsElement.innerText = null;
     wheelElement.innerText = null;
 
-    for (const [index, restaurant] of restaurants.entries()) {
-        const restaurantElement = document.createElement('ui-item');
+    for (const [index, item] of items.entries()) {
+        const itemElement = document.createElement('ui-item');
         
-        restaurantElement.innerText = restaurant;
-        restaurantElement.style.setProperty('--color', `hsl(${360 / restaurants.length * index + 30}deg, 100%, 50%)`)
+        itemElement.innerText = item;
+        itemElement.style.setProperty('--color', `hsl(${360 / items.length * index + 30}deg, 100%, 50%)`)
         
-        restaurantsElement.appendChild(restaurantElement);
+        itemsElement.appendChild(itemElement);
     }
     
     gradients = [];
-    sectionDegree = 360 / restaurants.length;
+    sectionDegree = 360 / items.length;
     
-    for (let index = 0; index < restaurants.length; index++) {
-        gradients.push(`hsl(${360 / restaurants.length * index + 30}deg, 100%, 50%) ${sectionDegree * index}deg ${sectionDegree * (index + 1)}deg`);
+    for (let index = 0; index < items.length; index++) {
+        gradients.push(`hsl(${360 / items.length * index + 30}deg, 100%, 50%) ${sectionDegree * index}deg ${sectionDegree * (index + 1)}deg`);
     }
     
     wheelElement.style.setProperty('background', `conic-gradient(${gradients.join(', ')})`);
@@ -42,6 +42,10 @@ let mouseDownData = null;
 let wheelRotation = 0;
 
 wheelElement.onmousedown = event => {
+    if (items.length < 2) {
+        return;
+    }
+
     mouseDownData = {
         x: event.screenX,
         y: event.screenY,
@@ -76,7 +80,7 @@ document.body.onmouseup = event => {
                     wheelRotation %= 360
                     const sectionIndex = Math.floor((360 - wheelRotation) / sectionDegree);
 
-                    winnerElement.innerText = restaurants[sectionIndex];
+                    winnerElement.innerText = items[sectionIndex];
                     document.body.prepend(winnerElement);
                 }
             }

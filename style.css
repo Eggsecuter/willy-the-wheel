@@ -14,6 +14,17 @@ body {
     justify-items: center;
 }
 
+ui-title {
+    display: block;
+    min-width: 10em;
+
+    padding: 0.3em 0;
+    border-bottom: 2px solid #444;
+
+    text-align: center;
+    font-size: 2em;
+}
+
 ui-winner {
     display: block;
 
@@ -60,11 +71,11 @@ ui-wheel-indicator {
     border-top: 2em solid #444;
 }
 
-ui-restaurants {
+ui-items {
     display: block;
 }
 
-ui-restaurants > ui-item {
+ui-items > ui-item {
     display: block;
     font-size: 1.2em;
     line-height: 2em;
@@ -72,7 +83,7 @@ ui-restaurants > ui-item {
     --color: #eee;
 }
 
-ui-restaurants > ui-item::before {
+ui-items > ui-item::before {
     content: '';
     display: inline-block;
 
