@@ -25,6 +25,20 @@ ui-title {
 	font-size: 2em;
 }
 
+ui-save-button {
+	display: block;
+	padding-block: 0.5rem;
+	padding-inline: 2rem;
+
+	color: white;
+	background-color: rgb(26, 182, 26);
+
+	font-size: 1.5rem;
+
+	cursor: pointer;
+	user-select: none;
+}
+
 ui-winner {
 	display: block;
 
