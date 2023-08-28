@@ -42,6 +42,12 @@ class WheelStore {
 			wheelTitleElement.innerText = wheel.title;
 			wheelElement.appendChild(wheelTitleElement);
 
+			for (const item of wheel.items) {
+				const wheelItemElement = document.createElement('ui-wheel-item');
+				wheelItemElement.innerText = item;
+				wheelElement.appendChild(wheelItemElement);
+			}
+
 			const wheelLoadButtonElement = document.createElement('ui-wheel-load-button');
 			wheelLoadButtonElement.innerText = 'Load';
 			wheelLoadButtonElement.onclick = () => {
@@ -61,12 +67,6 @@ class WheelStore {
 			wheelDeleteButtonElement.onclick = () => WheelStore.delete(wheel.id);
 			wheelElement.appendChild(wheelDeleteButtonElement);
 
-			for (const item of wheel.items) {
-				const wheelItemElement = document.createElement('ui-wheel-item');
-				wheelItemElement.innerText = item;
-				wheelElement.appendChild(wheelItemElement);
-			}
-
 			storedWheelsElement.appendChild(wheelElement);
 		}
 	}
@@ -76,7 +76,7 @@ const titleElement = document.querySelector('ui-title');
 const saveButtonElement = document.querySelector('ui-save-button');
 const itemsElement = document.querySelector('ui-items');
 const wheelElement = document.querySelector('ui-wheel-segments');
-const winnerElement = document.createElement('ui-winner');
+const winnerElement = document.querySelector('ui-winner');
 const inputElement = document.querySelector('input');
 const storedWheelsElement = document.querySelector('ui-stored-wheels');
 
@@ -164,9 +164,8 @@ document.body.onmouseup = event => {
 		speed = distance / deltaTime / 100;
 
 		if (speed > 0) {
-			if (winnerElement.innerText) {
-				document.body.removeChild(winnerElement);
-			}
+			winnerElement.innerText = '';
+			winnerElement.removeAttribute('ui-visible');
 
 			const start = new Date();
 
@@ -185,7 +184,7 @@ document.body.onmouseup = event => {
 					const sectionIndex = Math.floor((360 - wheelRotation) / sectionDegree);
 
 					winnerElement.innerText = items[sectionIndex];
-					document.body.prepend(winnerElement);
+					winnerElement.setAttribute('ui-visible', '');
 				}
 			}
 

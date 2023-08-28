@@ -5,13 +5,14 @@
 body {
 	display: grid;
 	width: 100vw;
-	height: 100vh;
 
-	margin: 0;
-	padding: 0;
+	margin-inline: auto;
+	padding-block: 2rem;
 
-	align-items: center;
+	background-color: #efefef;
+
 	justify-items: center;
+	gap: 1rem;
 }
 
 ui-title {
@@ -25,25 +26,32 @@ ui-title {
 	font-size: 2em;
 }
 
-ui-save-button {
+ui-save-button,
+ui-wheel-load-button,
+ui-wheel-delete-button {
 	display: block;
-	padding-block: 0.5rem;
-	padding-inline: 2rem;
+	padding: 0.5rem;
 
 	color: white;
-	background-color: rgb(26, 182, 26);
-
-	font-size: 1.5rem;
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	text-align: center;
 
 	cursor: pointer;
 	user-select: none;
+}
+
+ui-save-button {
+	background-color: rgb(26, 182, 26);
 }
 
 ui-winner {
 	display: block;
 
 	font-size: 3em;
+}
 
+ui-winner[ui-visible] {
 	animation: grow-wobble 0.8s;
 }
 
@@ -109,6 +117,50 @@ ui-items > ui-item::before {
 	
 	border-radius: 50%;
 	background: var(--color);
+}
+
+ui-stored-wheels {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2rem;
+}
+
+ui-stored-wheel {
+	display: flex;
+	flex-direction: column;
+	
+	width: calc(100% / 3 - 2 / 3 * 2rem);
+
+	background-color: rgb(190, 195, 221);
+	border-radius: 0.5rem;
+
+	overflow: hidden;
+}
+
+ui-wheel-title {
+	display: block;
+	padding: 0.5rem;
+
+	font-weight: bold;
+}
+
+ui-wheel-load-button {
+	background-color: rgb(26, 182, 26);
+
+	margin-top: auto;
+}
+
+ui-wheel-delete-button {
+	background-color: rgb(233, 44, 44);
+}
+
+ui-wheel-item {
+	display: block;
+	padding: 0.25rem 1rem;
+}
+
+ui-wheel-item::before {
+	content: '→ ';
 }
 
 @keyframes grow-wobble {
