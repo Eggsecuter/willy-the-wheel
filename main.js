@@ -52,7 +52,7 @@ class WheelStore {
 			wheelLoadButtonElement.innerText = 'Load';
 			wheelLoadButtonElement.onclick = () => {
 				titleElement.innerText = wheel.title;
-				items = wheel.items;
+				items = [...wheel.items];
 				
 				if (items.length > 0) {
 					saveButtonElement.style.display = 'block';
