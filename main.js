@@ -5,11 +5,11 @@ class WheelStore {
 		return JSON.parse(localStorage.getItem(WheelStore.storageKey) || '[]');
 	}
 
-	static save(title, items) {
+	static save(title, options) {
 		const wheels = WheelStore.load();
 		const id = Array(4).fill('').map(segment => Math.random().toString(36).substring(2, 8)).join('-');
 
-		wheels.unshift({id, title, items});
+		wheels.unshift({id, title, options});
 
 		localStorage.setItem(WheelStore.storageKey, JSON.stringify(wheels));
 
@@ -42,9 +42,9 @@ class WheelStore {
 			wheelTitleElement.innerText = wheel.title;
 			wheelElement.appendChild(wheelTitleElement);
 
-			for (const item of wheel.items) {
+			for (const option of wheel.options) {
 				const wheelItemElement = document.createElement('ui-wheel-item');
-				wheelItemElement.innerText = item;
+				wheelItemElement.innerText = option;
 				wheelElement.appendChild(wheelItemElement);
 			}
 
@@ -52,9 +52,9 @@ class WheelStore {
 			wheelLoadButtonElement.innerText = 'Load';
 			wheelLoadButtonElement.onclick = () => {
 				titleElement.innerText = wheel.title;
-				items = [...wheel.items];
+				options = [...wheel.options];
 				
-				if (items.length > 0) {
+				if (options.length > 0) {
 					saveButtonElement.style.display = 'block';
 				}
 		
@@ -74,7 +74,7 @@ class WheelStore {
 
 const titleElement = document.querySelector('ui-title');
 const saveButtonElement = document.querySelector('ui-save-button');
-const itemsElement = document.querySelector('ui-items');
+const optionsElement = document.querySelector('ui-options');
 const wheelElement = document.querySelector('ui-wheel-segments');
 const winnerElement = document.querySelector('ui-winner');
 const inputElement = document.querySelector('input');
@@ -82,9 +82,11 @@ const storedWheelsElement = document.querySelector('ui-stored-wheels');
 
 saveButtonElement.style.display = 'none';
 
+let options = [];
+
 saveButtonElement.onclick = () => {
-	if (items.length > 0) {
-		WheelStore.save(titleElement.innerText, items);
+	if (options.length > 0) {
+		WheelStore.save(titleElement.innerText, options);
 	}
 }
 
@@ -97,14 +99,12 @@ titleElement.onfocus = () => {
 	selection.addRange(range);
 }
 
-let items = [];
-
 inputElement.onkeydown = event => {
 	if (event.key == 'Enter' && inputElement.value) {
-		items.push(inputElement.value);
+		options.push(inputElement.value);
 		inputElement.value = '';
 
-		if (items.length > 0) {
+		if (options.length > 0) {
 			saveButtonElement.style.display = 'block';
 		}
 
@@ -118,23 +118,23 @@ WheelStore.render();
 // draw wheel and drag functionality
 //
 function draw() {
-	itemsElement.innerText = null;
+	optionsElement.innerText = null;
 	wheelElement.innerText = null;
 
-	for (const [index, item] of items.entries()) {
-		const itemElement = document.createElement('ui-item');
+	for (const [index, option] of options.entries()) {
+		const optionElement = document.createElement('ui-option');
 		
-		itemElement.innerText = item;
-		itemElement.style.setProperty('--color', `hsl(${360 / items.length * index + 30}deg, 100%, 50%)`)
+		optionElement.innerText = option;
+		optionElement.style.setProperty('--color', `hsl(${360 / options.length * index + 30}deg, 100%, 50%)`)
 		
-		itemsElement.appendChild(itemElement);
+		optionsElement.appendChild(optionElement);
 	}
 	
 	gradients = [];
-	sectionDegree = 360 / items.length;
+	sectionDegree = 360 / options.length;
 	
-	for (let index = 0; index < items.length; index++) {
-		gradients.push(`hsl(${360 / items.length * index + 30}deg, 100%, 50%) ${sectionDegree * index}deg ${sectionDegree * (index + 1)}deg`);
+	for (let index = 0; index < options.length; index++) {
+		gradients.push(`hsl(${360 / options.length * index + 30}deg, 100%, 50%) ${sectionDegree * index}deg ${sectionDegree * (index + 1)}deg`);
 	}
 	
 	wheelElement.style.setProperty('background', `conic-gradient(${gradients.join(', ')})`);
@@ -146,7 +146,7 @@ let mouseDownData = null;
 let wheelRotation = 0;
 
 wheelElement.onmousedown = event => {
-	if (items.length < 2) {
+	if (options.length < 2) {
 		return;
 	}
 
@@ -183,7 +183,7 @@ document.body.onmouseup = event => {
 					wheelRotation %= 360
 					const sectionIndex = Math.floor((360 - wheelRotation) / sectionDegree);
 
-					winnerElement.innerText = items[sectionIndex];
+					winnerElement.innerText = options[sectionIndex];
 					winnerElement.setAttribute('ui-visible', '');
 				}
 			}

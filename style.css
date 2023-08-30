@@ -92,7 +92,7 @@ ui-wheel-indicator {
 	border-top: 2em solid #444;
 }
 
-ui-items {
+ui-options {
 	display: flex;
 	flex-wrap: wrap;
 	column-gap: 1.5rem;
@@ -101,7 +101,7 @@ ui-items {
 	max-width: 30rem;
 }
 
-ui-items > ui-item {
+ui-options > ui-option {
 	display: block;
 	font-size: 1.2rem;
 	line-height: 2rem;
@@ -109,7 +109,7 @@ ui-items > ui-item {
 	--color: #eee;
 }
 
-ui-items > ui-item::before {
+ui-options > ui-option::before {
 	content: '';
 	display: inline-block;
 
