@@ -4,12 +4,11 @@
 
 body {
 	display: grid;
-	width: 100vw;
+	width: 90vw;
+	max-width: 80rem;
 
 	margin-inline: auto;
 	padding-block: 2rem;
-
-	background-color: #efefef;
 
 	justify-items: center;
 	gap: 1rem;
@@ -57,8 +56,8 @@ ui-winner[ui-visible] {
 
 ui-wheel {
 	display: block;
-	width: 50%;
-	max-width: 30em;
+	width: 100%;
+	max-width: 30rem;
 
 	border: 5px #444 solid;
 	border-radius: 50%;
@@ -94,7 +93,12 @@ ui-wheel-indicator {
 }
 
 ui-items {
-	display: block;
+	display: flex;
+	flex-wrap: wrap;
+	column-gap: 1.5rem;
+	justify-content: center;
+
+	max-width: 30rem;
 }
 
 ui-items > ui-item {
@@ -119,27 +123,35 @@ ui-items > ui-item::before {
 	background: var(--color);
 }
 
+input {
+	padding: 0.5rem;
+	border-radius: 0.25rem;
+	border: 1px solid gray;
+}
+
 ui-stored-wheels {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 2rem;
+
+	justify-content: center;
 }
 
 ui-stored-wheel {
 	display: flex;
 	flex-direction: column;
 	
-	width: calc(100% / 3 - 2 / 3 * 2rem);
+	width: 15rem;
 
-	background-color: rgb(190, 195, 221);
-	border-radius: 0.5rem;
+	border: 1px dashed rgb(190, 195, 221);
+	border-radius: 0.25rem;
 
 	overflow: hidden;
 }
 
 ui-wheel-title {
 	display: block;
-	padding: 0.5rem;
+	padding: 1rem;
 
 	font-weight: bold;
 }
@@ -151,16 +163,27 @@ ui-wheel-load-button {
 }
 
 ui-wheel-delete-button {
-	background-color: rgb(233, 44, 44);
+	color: rgb(233, 44, 44);
 }
 
 ui-wheel-item {
-	display: block;
+	display: flex;
+	margin-left: 1rem;
 	padding: 0.25rem 1rem;
+
+	word-break: break-word;
 }
 
 ui-wheel-item::before {
-	content: '→ ';
+	content: '→';
+
+	display: block;
+	margin-left: -1rem;
+	padding-right: 0.5rem;
+}
+
+ui-wheel-item:last-of-type {
+	margin-bottom: 1rem;
 }
 
 @keyframes grow-wobble {
