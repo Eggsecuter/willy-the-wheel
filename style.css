@@ -65,6 +65,8 @@ ui-wheel {
 	aspect-ratio: 1;
 
 	position: relative;
+
+	cursor: pointer;
 }
 
 ui-wheel-segments {

@@ -164,7 +164,7 @@ draw();
 let wheelRotation = 0;
 
 wheelElement.onclick = () => {
-	let speed = Math.random() * 0.04 + 0.005;
+	let speed = Math.random() * 0.03 + 0.01; // range 0.01 - 0.04
 
 	if (speed > 0) {
 		winnerElement.innerText = '';
@@ -175,7 +175,7 @@ wheelElement.onclick = () => {
 		function next() {
 			const deltaTime = +new Date() - +start;
 			wheelRotation += speed * deltaTime;
-			speed *= 0.99;
+			speed *= 0.985 + Math.random() / 200; // range 0.985 - 0.99
 
 			wheelElement.style.transform = `rotate(${wheelRotation}deg)`;
 
