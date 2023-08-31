@@ -124,17 +124,26 @@ ui-options > ui-option::before {
 }
 
 input {
-	padding: 0.5rem;
 	border-radius: 0.25rem;
 	border: 1px solid gray;
+}
+
+input[type="range"] {
+	margin-left: 1rem;
+	vertical-align: middle;
+}
+
+input[type="text"] {
+	padding: 0.5rem;
 }
 
 ui-stored-wheels {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 2rem;
-
 	justify-content: center;
+
+	margin-top: 8rem;
 }
 
 ui-stored-wheel {

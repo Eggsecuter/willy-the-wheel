@@ -44,7 +44,7 @@ class WheelStore {
 
 			for (const option of wheel.options) {
 				const wheelItemElement = document.createElement('ui-wheel-item');
-				wheelItemElement.innerText = option;
+				wheelItemElement.innerText = option.name;
 				wheelElement.appendChild(wheelItemElement);
 			}
 
@@ -101,7 +101,10 @@ titleElement.onfocus = () => {
 
 inputElement.onkeydown = event => {
 	if (event.key == 'Enter' && inputElement.value) {
-		options.push(inputElement.value);
+		options.push({
+			name: inputElement.value,
+			weight: 1
+		});
 		inputElement.value = '';
 
 		if (options.length > 0) {
@@ -123,18 +126,35 @@ function draw() {
 
 	for (const [index, option] of options.entries()) {
 		const optionElement = document.createElement('ui-option');
-		
-		optionElement.innerText = option;
-		optionElement.style.setProperty('--color', `hsl(${360 / options.length * index + 30}deg, 100%, 50%)`)
+
+		optionElement.innerText = option.name;
+		optionElement.style.setProperty('--color', `hsl(${360 / options.length * index + 30}deg, 100%, 50%)`);
+
+		const optionWeightElement = document.createElement('input');
+		optionWeightElement.type = 'range';
+		optionWeightElement.min = 0.05;
+		optionWeightElement.max = 1;
+		optionWeightElement.step = 0.05;
+		optionWeightElement.value = option.weight;
+		optionWeightElement.onchange = (event) => {
+			option.weight = event.target.value;
+			draw();
+		};
+
+		optionElement.appendChild(optionWeightElement);
 		
 		optionsElement.appendChild(optionElement);
 	}
 	
-	gradients = [];
-	sectionDegree = 360 / options.length;
-	
+	let gradients = [];
+	const weightSummary = options.reduce((previous, current) => previous + +current.weight, 0);
+	let rotationOffset = 0;
+
 	for (let index = 0; index < options.length; index++) {
-		gradients.push(`hsl(${360 / options.length * index + 30}deg, 100%, 50%) ${sectionDegree * index}deg ${sectionDegree * (index + 1)}deg`);
+		const sectionDegree = 360 / weightSummary * options[index].weight;
+		console.log(rotationOffset, sectionDegree);
+		gradients.push(`hsl(${360 / options.length * index + 30}deg, 100%, 50%) ${rotationOffset}deg ${rotationOffset + sectionDegree}deg`);
+		rotationOffset += sectionDegree;
 	}
 	
 	wheelElement.style.setProperty('background', `conic-gradient(${gradients.join(', ')})`);
@@ -180,10 +200,22 @@ document.body.onmouseup = event => {
 					requestAnimationFrame(next);
 				}
 				else {
-					wheelRotation %= 360
-					const sectionIndex = Math.floor((360 - wheelRotation) / sectionDegree);
+					wheelRotation %= 360;
+					
+					function getWinningOption() {
+						const weightSummary = options.reduce((previous, current) => previous + +current.weight, 0);
+						let rotationOffset = 0;
 
-					winnerElement.innerText = options[sectionIndex];
+						for (let optionIndex = options.length - 1; optionIndex >= 0; optionIndex--) {
+							rotationOffset += 360 / weightSummary * options[optionIndex].weight;
+
+							if (rotationOffset > wheelRotation) {
+								return options[optionIndex];
+							}
+						}
+					}
+					
+					winnerElement.innerText = getWinningOption().name;
 					winnerElement.setAttribute('ui-visible', '');
 				}
 			}
