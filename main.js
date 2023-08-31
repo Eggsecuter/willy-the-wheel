@@ -152,7 +152,6 @@ function draw() {
 
 	for (let index = 0; index < options.length; index++) {
 		const sectionDegree = 360 / weightSummary * options[index].weight;
-		console.log(rotationOffset, sectionDegree);
 		gradients.push(`hsl(${360 / options.length * index + 30}deg, 100%, 50%) ${rotationOffset}deg ${rotationOffset + sectionDegree}deg`);
 		rotationOffset += sectionDegree;
 	}
@@ -162,67 +161,48 @@ function draw() {
 
 draw();
 
-let mouseDownData = null;
 let wheelRotation = 0;
 
-wheelElement.onmousedown = event => {
-	if (options.length < 2) {
-		return;
-	}
+wheelElement.onclick = () => {
+	let speed = Math.random() * 0.04 + 0.005;
 
-	mouseDownData = {
-		x: event.screenX,
-		y: event.screenY,
-		timestamp: Date.now()
-	}
-}
+	if (speed > 0) {
+		winnerElement.innerText = '';
+		winnerElement.removeAttribute('ui-visible');
 
-document.body.onmouseup = event => {
-	if (mouseDownData) {
-		distance = Math.hypot(event.screenX - mouseDownData.x, event.screenY - mouseDownData.y);
-		deltaTime = Date.now() - mouseDownData.timestamp;
-		speed = distance / deltaTime / 100;
+		const start = new Date();
 
-		if (speed > 0) {
-			winnerElement.innerText = '';
-			winnerElement.removeAttribute('ui-visible');
+		function next() {
+			const deltaTime = +new Date() - +start;
+			wheelRotation += speed * deltaTime;
+			speed *= 0.99;
 
-			const start = new Date();
+			wheelElement.style.transform = `rotate(${wheelRotation}deg)`;
 
-			function next() {
-				const deltaTime = +new Date() - +start;
-				wheelRotation += speed * deltaTime;
-				speed *= 0.99;
+			if (speed > 1e-5) {
+				requestAnimationFrame(next);
+			}
+			else {
+				wheelRotation %= 360;
+				
+				function getWinningOption() {
+					const weightSummary = options.reduce((previous, current) => previous + +current.weight, 0);
+					let rotationOffset = 0;
 
-				wheelElement.style.transform = `rotate(${wheelRotation}deg)`;
+					for (let optionIndex = options.length - 1; optionIndex >= 0; optionIndex--) {
+						rotationOffset += 360 / weightSummary * options[optionIndex].weight;
 
-				if (speed > 1e-5) {
-					requestAnimationFrame(next);
-				}
-				else {
-					wheelRotation %= 360;
-					
-					function getWinningOption() {
-						const weightSummary = options.reduce((previous, current) => previous + +current.weight, 0);
-						let rotationOffset = 0;
-
-						for (let optionIndex = options.length - 1; optionIndex >= 0; optionIndex--) {
-							rotationOffset += 360 / weightSummary * options[optionIndex].weight;
-
-							if (rotationOffset > wheelRotation) {
-								return options[optionIndex];
-							}
+						if (rotationOffset > wheelRotation) {
+							return options[optionIndex];
 						}
 					}
-					
-					winnerElement.innerText = getWinningOption().name;
-					winnerElement.setAttribute('ui-visible', '');
 				}
+				
+				winnerElement.innerText = getWinningOption().name;
+				winnerElement.setAttribute('ui-visible', '');
 			}
-
-			requestAnimationFrame(next);
 		}
 
-		mouseDownData = null;
+		requestAnimationFrame(next);
 	}
 }
